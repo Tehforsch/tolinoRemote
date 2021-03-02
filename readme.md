@@ -344,6 +344,18 @@ In the still open adb shell we mount the file system in readonly again:
 ```
 
 ## Testing the remote control script (optional)
-Properly using the remote control script we just copied to the Tolino would require actually building the remote control which is done in part 3 of this guide :). Here, we want to test whether our script works without having the physical remote control present. First, we reboot the Tolino, to make sure that the service we defined in the `init.rc` in our boot.img is actually run. Once we have rebooted, we join a WiFi that our local machine is in with the Tolino. Now we should be able to open a book on the tolino
+Properly using the remote control script we just copied to the Tolino would require actually building the remote control which is done in part 3 of this guide :). Here, we want to test whether our script works without having the physical remote control present. First, we reboot the Tolino, to make sure that the service we defined in the `init.rc` in our boot.img is actually run. Once we have rebooted, we join a WiFi that our local machine is in with the Tolino. 
+Now we need to find out the IP address of our Tolino. If you can't check the router or use nmap, one solution for this is to find it out via adb - connect the tolino via USB and run
+```
+$ adb shell
+# busybox ifconfig
+```
+
+Once we have the IP adress we should be able to open a book on the tolino and run
+```
+$ netcat <IP> 5000
+```
+This should establish a connection with the remote control script running on the tolino. Entering anything (and pressing enter afterwards) should flip to the next page, entering "back" and pressing enter should flip to the previous page.
 
 # Building the actual remote control
+TODO
