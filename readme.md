@@ -1,7 +1,7 @@
 TODO: Maybe add udev rules to guide, not sure if needed
-TODO: Maybe How to flash backup
-TODO: BSD license for netcat
-Note: First install update.zip for current version
+TODO: How to flash backup if something failed
+TODO: Finish third part on building the device once it works
+TODO: Add note on needing to update before the rooting
 
 # Introduction
 This is a guide to building a remote control for e-book readers by Tolino (and possibly Kobo). 
@@ -10,6 +10,7 @@ The guide consists of three parts:
 1. Gaining root access to the Tolino so we can run our remote control client on it
 2. Writing the remote control client and getting it to run on the Tolino
 3. Building the actual remote control using an ESP32, and a 3D-printed case.
+4. Writing the remote control server running on the ESP32
 
 
 # Rooting the Tolino
