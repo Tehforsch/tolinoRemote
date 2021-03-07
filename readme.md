@@ -1,4 +1,6 @@
 TODO: Maybe add udev rules to guide, not sure if needed
+TODO: Maybe How to flash backup
+TODO: BSD license for netcat
 Note: First install update.zip for current version
 
 # Introduction
