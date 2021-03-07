@@ -4,6 +4,7 @@ TODO: Finish third part on building the device once it works
 TODO: Add note on needing to update before the rooting
 
 # Introduction
+Important: This guide is not quite finished yet, the rooting section and the remote client / server work properly but the actual remote control has no case yet :)
 This is a guide to building a remote control for e-book readers by Tolino (and possibly Kobo). 
 The purpose of the remote control is to flip to the next(previous) page without requiring us to actually physically touch the screen of the Tolino which requires leaving the comfort of the blanket and is therefore unacceptable.
 The guide consists of three parts:
