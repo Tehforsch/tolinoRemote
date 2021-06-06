@@ -52,7 +52,7 @@ $ zcat ../initrd.img | cpio -vid
 ```
   
 ## default.prop
-In the file `default.prop`, we should find the following three lines (not necessarily consecutive)
+In the file `default.prop`, we should find the following four lines (not necessarily consecutive)
 ```
 ro.debuggable=0
 ro.secure=1
@@ -65,7 +65,6 @@ ro.secure=0
 persist.sys.usb.config=mass_storage,adb 
 ```
 
-## init.rc
 In `init.rc`, we want to
 1. not mount any of the file systems, so that we can create a backup of it
 2. enable usb mass storage for writing the backup
@@ -281,12 +280,14 @@ However, currently we only have root access to our tolino in recovery mode, not 
 ro.debuggable=0
 ro.secure=1
 persist.sys.usb.config=mass_storage
+tolino.wifi_timeout=180
 ```
 to these:
 ```
 ro.debuggable=1 
 ro.secure=0 
 persist.sys.usb.config=mass_storage,adb 
+tolino.wifi_timeout=86400
 ```
 
 In `init.rc`, we add 
@@ -317,7 +318,7 @@ where we run
 # busybox sync && busybox sleep 5 && busybox sync
 ```
 where the last command is just needed to ensure that what we just copied is written properly to the memory.
-Now we should be able to simply reboot the tolino by holding down the power button for a while. If everything worked, we should now have root access via adb in a normal boot. You are now officially allowed to call your self Martin Rooter King.
+Now we should be able to simply reboot the tolino by holding down the power button for a while. If everything worked, we should now have root access via adb in a normal boot. You are now officially allowed to call yourself Martin Rooter King.
 
 ## References
 1. Guide to root the Tolino by roms3700 (German): https://www.e-reader-forum.de/t/tolino-vision-2-rooten.147429/
@@ -342,7 +343,18 @@ Now, in a shell on our local machine, we simply push the folder `remoteControl` 
 $ adb push remoteControl/. /system/usr/remoteControl
 ```
 
-In the still open adb shell we mount the file system in readonly again:
+In the still open adb shell, we edit the file `/system/build.prop` with 
+`nano /system/build.prop`
+and change the line
+`tolino.wifi_timeout=180`
+to
+`tolino.wifi_timeout=86400`
+
+Here, changing the `wifi_timeout` ensures that the tolino does not disconnect from the wifi in the background while reading, which prevents the remote control from working. Unfortunately, sending signals via TCP does not keep the wifi connection alive, so we have to resort to changing the timeout to a large number (86400 here is the number of seconds in a day - feel free to change this to a lower number if you'd prefer the wifi to turn off earlier for battery saving reasons).
+
+## init.rc
+
+then we mount the file system in readonly again:
 ```
 # mount -o ro,remount /dev/block/mmcblk0p5 /system
 ```
