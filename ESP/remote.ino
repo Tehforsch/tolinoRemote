@@ -6,14 +6,14 @@
 
 #define DOUBLE_CLICK_LENGTH 800
 
+static unsigned long last_button_time = millis();
+static bool already_sent = false;
+static int forward_pressed_last_loop = LOW;
 
 const char *ssid = "tolinoRemote";
 const char *password = "supersafepassword";
 
 WiFiServer server(80);
-
-int forward_pressed_last_loop = LOW;
-
 WiFiClient client;
 
 void setup() {
@@ -33,8 +33,7 @@ void setup() {
   
 }
 
-void loop() {
-  static unsigned long last_button_time = millis();
+void loop() {  
   if (!client.connected()) {
     Serial.println("Server not reachable.");
     client.connect("192.168.4.2", 5000);
@@ -44,20 +43,24 @@ void loop() {
     unsigned long current_time = millis();
     if (forward_pressed_last_loop == LOW && forward_pressed == HIGH) {
       last_button_time = current_time;
+      already_sent = false;
     }
-    if (forward_pressed_last_loop == HIGH && forward_pressed == LOW) {
-      if (current_time - last_button_time > DOUBLE_CLICK_LENGTH) {
+    if (forward_pressed_last_loop == HIGH && forward_pressed == HIGH) {
+      if (current_time - last_button_time > DOUBLE_CLICK_LENGTH && !already_sent) {
         client.println("back");
         Serial.println("Back pressed");
+        already_sent = true;
       }
-      else {
+    }
+    if (forward_pressed_last_loop == HIGH && forward_pressed == LOW) {
+      if (!already_sent) {
         client.println("next");
-        Serial.println("Forward pressed");
-      }
+        Serial.println("Forward pressed");  
+      }   
     }
     forward_pressed_last_loop = forward_pressed;
   }
-  delay(200);
+  delay(100);
   bool deepsleep = millis()-last_button_time > 300000;
   if(deepsleep){
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_2, HIGH);
