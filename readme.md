@@ -337,10 +337,10 @@ In order to install the remote script, we first make sure we can write to `/syst
 $ adb shell
 # mount -o rw,remount /dev/block/mmcblk0p5 /system
 ```
-Now, in a shell on our local machine, we simply push the folder `remoteControl` in this repo to `/system/usr`:
+Now, in a shell on our local machine, we simply push the folder `tolino` in this repo to `/system/usr`:
 
 ```
-$ adb push remoteControl/. /system/usr/remoteControl
+$ adb push tolino/. /system/usr/remoteControl
 ```
 
 In the still open adb shell, we edit the file `/system/build.prop` with 
