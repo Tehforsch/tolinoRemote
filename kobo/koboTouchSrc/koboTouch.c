@@ -49,7 +49,7 @@ void touch_at(int x, int y) {
     // will not be received when executing this multiple times in a row. I am not 
     // sure why, but this means that the touch doesn't work (even though the EV_KEY
     // and EV_ABS/ABS_PRESSURE events still take place.
-    // Here, we simply reset the coordinates to 0 after each touch
+    // Here, we simply touch at slightly offset coordinates after each touch
     struct input_event event_slightly_move_x = make_event(EV_ABS, ABS_X, x-1);
     struct input_event event_slightly_move_y = make_event(EV_ABS, ABS_Y, y-1);
 

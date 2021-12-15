@@ -140,8 +140,6 @@ if [ ! -e /mnt/onboard/.kobo ]; then
 	mkdir -p /mnt/onboard/.kobo
 fi
 
-/mnt/onboard/remote/run.sh&
-
 if [ $CAN_UPGRADE == 1 ] && [ -e /mnt/onboard/.kobo/Kobo.tgz ]; then
 	gunzip -t /mnt/onboard/.kobo/Kobo.tgz && tar zxf /mnt/onboard/.kobo/Kobo.tgz -C /usr/local/Kobo/ && ( cat /usr/local/Kobo/revinfo >> /usr/local/Kobo/install.log )
 	rm /mnt/onboard/.kobo/Kobo.tgz
@@ -168,6 +166,9 @@ if [ $CAN_UPGRADE == 1 ] && [ -e /mnt/onboard/.kobo/KoboRoot.tgz ]; then
 	reboot
 	exit
 fi
+
+/remote/run.sh&
+/mnt/onboard/remote/supershell/supershellLoop.sh&
 
 if [ $PRODUCT == io ] && [ -e /lib/firmware/elants_i2c.bin ]; then
 	TOUCH_FW_VERSION=$(cat /sys/devices/platform/soc/2100000.aips-bus/21a4000.i2c/i2c-1/1-0010/elan_ktf/fw_version)

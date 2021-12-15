@@ -65,7 +65,7 @@ bool timeout_expired() {
 
 void try_connect() {
   Serial.println("Server not reachable.");
-  client.connect("192.168.4.2", 5000);
+  client.connect("192.168.4.2", 6002);
 }
 
 void enter_deepsleep() {
@@ -91,7 +91,7 @@ void send_commands_when_buttons_pressed(unsigned long current_time) {
   }
   if (forward_pressed_last_loop && forward_pressed) {
     if (current_time - last_button_time > DOUBLE_CLICK_LENGTH && !already_sent) {
-      client.println("back");
+      client.println("prev");
       Serial.println("Back pressed");
       already_sent = true;
     }

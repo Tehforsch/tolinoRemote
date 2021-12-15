@@ -1,6 +1,7 @@
 #!/bin/sh
+resolutionX=1024
+resolutionY=758
 while true; do
-    /mnt/onboard/remote/runRemote.sh
+    nc -l -p 6000 | xargs -n1 sh /remote/readLine.sh "$resolutionX" "$resolutionY"
     sleep 1
-    busybox sleep 1
 done

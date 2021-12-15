@@ -371,7 +371,7 @@ Once we have the IP adress we should be able to open a book on the tolino and ru
 ```
 $ netcat <IP> 5000
 ```
-This should establish a connection with the remote control script running on the tolino. Entering anything (and pressing enter afterwards) should flip to the next page, entering "back" and pressing enter should flip to the previous page.
+This should establish a connection with the remote control script running on the tolino. Entering "next" should flip to the next page, entering "prev" should flip to the previous page.
 
 # Building the actual remote control
 TODO

@@ -5,7 +5,7 @@ yResolution="$2"
 command="$3"
 xPress=$xResolution/2
 margin=100
-if [[ "$command" == "back" ]]; then
+if [[ "$command" == "prev" ]]; then
     # Press the middle left side of the screen
     # This translates to a medium x value and high y value
     yPress=$yResolution-$margin
