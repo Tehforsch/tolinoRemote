@@ -9,6 +9,7 @@
 #define DOUBLE_CLICK_LENGTH 800
 #define LOOP_TIMEOUT 100
 #define IDLE_TIME_BEFORE_DEEP_SLEEP 300000
+#define TCP_PORT 6302
 
 #define BATTERY_LEVEL_TRESHOLD 2800
 #define NUM_MEASUREMENTS_REQUIRED 10
@@ -64,8 +65,8 @@ bool timeout_expired() {
 }
 
 void try_connect() {
+  client.connect("192.168.4.2", TCP_PORT);
   Serial.println("Server not reachable.");
-  client.connect("192.168.4.2", 6002);
 }
 
 void enter_deepsleep() {
