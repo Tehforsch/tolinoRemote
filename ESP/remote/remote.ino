@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <WiFiAP.h>
 #include <WiFiClient.h>
+#include "esp_wifi.h"
 
 #define FORWARD_BUTTON 2
 #define BATTERY_LEVEL_PIN 33
@@ -12,7 +13,7 @@
 #define TCP_PORT 6302
 
 #define BATTERY_LEVEL_TRESHOLD 2800
-#define NUM_MEASUREMENTS_REQUIRED 10
+#define NUM_MEASUREMENTS_REQUIRED 20
 
 #define LOOP_COUNT_SEND_BATTERY_LEVEL 100
 
@@ -22,6 +23,8 @@ static int num_times_voltage_too_low = 0;
 static bool forward_pressed_last_loop = false;
 static int num_loop = 0;
 static int battery_level = 0;
+
+static bool in_deepsleep = false;
 
 const char *ssid = "tolinoRemote";
 const char *password = "supersafepassword";
@@ -76,10 +79,15 @@ void enter_deepsleep() {
 #elif defined (ARDUINO_ESP32_DEV)
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_2, HIGH);
 #else
-  #error Compiling for unsupported target.
+  #error Add deep sleep instruction for this platform or change platform to ESP32/ESP32C3
 #endif
-  adc_power_off(); // Not sure what this does, recommended at
+  in_deepsleep = true;
+  WiFi.mode(WIFI_MODE_NULL);
+  adc_power_off(); // This is deprecated but it was recommended at
                    // https://github.com/espressif/arduino-esp32/issues/1113
+                   // that adc_power_release() does not help with high currents
+                   // so I'll leave it in.
+                   
   esp_deep_sleep_start();
 }
 
@@ -113,6 +121,10 @@ void send_commands_when_buttons_pressed(unsigned long current_time) {
 }
 
 void loop() {
+  if (in_deepsleep) {
+    in_deepsleep = false;
+    setup();
+  }
   num_loop += 1;
   unsigned long current_time = millis();
   read_battery_level();
