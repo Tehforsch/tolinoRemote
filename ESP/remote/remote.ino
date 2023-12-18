@@ -60,7 +60,7 @@ bool battery_too_low() {
   return num_times_voltage_too_low > NUM_MEASUREMENTS_REQUIRED;
 }
 
-bool timeout_expired() {
+bool time_since_last_button_press_too_long() {
   return millis() - last_button_time > IDLE_TIME_BEFORE_DEEP_SLEEP;
 }
 
@@ -71,7 +71,13 @@ void try_connect() {
 
 void enter_deepsleep() {
   client.print("deepsleep");
+#if defined (ARDUINO_ESP32C3_DEV)
+  esp_deep_sleep_enable_gpio_wakeup(GPIO_NUM_2, ESP_GPIO_WAKEUP_GPIO_HIGH);
+#elif defined (ARDUINO_ESP32_DEV)
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_2, HIGH);
+#else
+  #error Compiling for unsupported target.
+#endif
   adc_power_off(); // Not sure what this does, recommended at
                    // https://github.com/espressif/arduino-esp32/issues/1113
   esp_deep_sleep_start();
@@ -119,8 +125,7 @@ void loop() {
       send_battery_level();
     }
   }
-  bool deepsleep = battery_too_low() || timeout_expired();
-  if (deepsleep) {
+  if (battery_too_low() || time_since_last_button_press_too_long()) {
     enter_deepsleep();
   }
   delay(LOOP_TIMEOUT);
